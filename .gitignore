@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+
+# Django Secrets
+*.env
+.env.*
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pip
+pip-log.txt
+
+# Coverage testing
+.coverage
+htmlcov/
+
+# pytest
+.cache/
+*.cover
+*.py,cover
+
+# mypy
+.mypy_cache/
+
+# IDE
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Node packages (if you use React later)
+node_modules/
+
+# Misc
+*.bak
+*.swp

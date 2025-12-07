@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>UrbanCart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        
+        <!-- Left section: Logo first -->
+        <div class="flex items-center space-x-6">
+          <!-- Logo -->
+          <a href="/" class="text-2xl font-bold text-blue-600">UrbanCart</a>
+
+          <!-- Navigation -->
+          <a href="/" class="text-gray-700 hover:text-blue-600">Home</a>
+          <a href="/admin/" class="text-gray-700 hover:text-blue-600">Admin</a>
+
+          <!-- Category dropdown -->
+          <form action="/" method="GET">
+            <select 
+              name="category" 
+              onchange="this.form.submit()" 
+              class="border border-gray-300 px-2 py-1 rounded focus:outline-none focus:ring focus:ring-blue-200"
+            >
+              <option value="">All Categories</option>
+              {% for c in categories %}
+                <option value="{{ c.id }}" 
+                  {% if request.GET.category == c.id|stringformat:'s' %} selected {% endif %}
+                >
+                  {{ c.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </form>
+
+          <!-- Sort dropdown -->
+          <form action="/" method="GET">
+            <select 
+              name="sort" 
+              onchange="this.form.submit()"
+              class="border border-gray-300 px-2 py-1 rounded focus:outline-none focus:ring focus:ring-blue-200"
+            >
+              <option value="">Sort By</option>
+              <option value="low" {% if request.GET.sort == "low" %}selected{% endif %}>Price: Low to High</option>
+              <option value="high" {% if request.GET.sort == "high" %}selected{% endif %}>Price: High to Low</option>
+            </select>
+          </form>
+
+          <!-- Price range -->
+          <form action="/" method="GET" class="flex space-x-2">
+            <input 
+              type="number" 
+              name="min" 
+              placeholder="Min ₹" 
+              class="border border-gray-300 px-2 py-1 rounded w-20 focus:outline-none focus:ring focus:ring-blue-200"
+              value="{{ request.GET.min }}"
+            >
+            <input 
+              type="number" 
+              name="max" 
+              placeholder="Max ₹" 
+              class="border border-gray-300 px-2 py-1 rounded w-20 focus:outline-none focus:ring focus:ring-blue-200"
+              value="{{ request.GET.max }}"
+            >
+            <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+              Go
+            </button>
+          </form>
+        </div>
+
+        <!-- Right section: Search bar -->
+        <form action="/" method="GET" class="flex">
+          <input
+            type="text"
+            name="q"
+            placeholder="Search products..."
+            class="border border-gray-300 rounded-l px-3 py-1 focus:outline-none focus:ring focus:ring-blue-200"
+            value="{{ request.GET.q }}"
+          />
+          <button
+            class="bg-blue-600 text-white px-4 rounded-r hover:bg-blue-700"
+          >
+            Search
+          </button>
+        </form>
+      </div>
+    </nav>
+
+    <!-- Page content -->
+    <div class="max-w-7xl mx-auto py-8 px-4">
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

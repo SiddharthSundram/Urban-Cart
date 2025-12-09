@@ -1,41 +1,114 @@
 {% extends 'store/base.html' %}
+
 {% block content %}
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <div>
-        <img src="{{ product.image.url }}" class="rounded-lg shadow-lg w-full">
-    </div>
+    <nav class="flex text-sm font-medium text-slate-500 mb-8">
+        <ol class="flex items-center space-x-2">
+            <li><a href="{% url 'home' %}" class="hover:text-indigo-600 transition">Home</a></li>
+            <li><span class="text-slate-300">/</span></li>
+            <li><a href="{% url 'home' %}?category={{ product.category.id }}" class="hover:text-indigo-600 transition">{{ product.category.name }}</a></li>
+            <li><span class="text-slate-300">/</span></li>
+            <li class="text-slate-900">{{ product.name }}</li>
+        </ol>
+    </nav>
 
-    <div>
-        <h1 class="text-3xl font-bold mb-2">{{ product.name }}</h1>
-        <p class="text-green-600 text-2xl font-semibold mb-4">₹{{ product.price }}</p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-        <p class="text-gray-700 mb-6">{{ product.description }}</p>
+        <div class="lg:sticky lg:top-24">
+            <div class="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 shadow-sm border border-slate-200 relative group">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                         class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700 ease-out">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-slate-400">
+                        <i class="fas fa-image text-5xl"></i>
+                    </div>
+                {% endif %}
+                
+                <span class="absolute top-4 left-4 bg-white/90 backdrop-blur text-indigo-600 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                    {{ product.category.name }}
+                </span>
+            </div>
+        </div>
 
-        <form method="POST" class="bg-white p-6 rounded-lg shadow-md">
-            {% csrf_token %}
+        <div>
+            <div class="mb-10">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">
+                    {{ product.name }}
+                </h1>
+                
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-3xl font-bold text-indigo-600">₹{{ product.price }}</span>
+                    {% if product.old_price %} 
+                        <span class="text-lg text-slate-400 line-through">₹{{ product.old_price }}</span>
+                    {% endif %}
+                    <span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">In Stock</span>
+                </div>
 
-            <div class="mb-4">
-                <label class="block font-medium mb-1" >Name</label>
-                <input type="text" name="name" required class="w-full border p-2 rounded" placeholder="Ex: Siddharth Sundram">
+                <div class="prose prose-slate text-slate-600 leading-relaxed">
+                    <p>{{ product.description }}</p>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label class="block font-medium mb-1">Phone</label>
-                <input type="text" name="phone" required class="w-full border p-2 rounded" placeholder="Ex: +91 6202067088">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fas fa-shopping-cart text-indigo-600"></i> Express Checkout
+                    </h3>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <form method="POST" class="space-y-5">
+                        {% csrf_token %}
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-slate-400"><i class="fas fa-user"></i></span>
+                                <input type="text" name="name" required 
+                                       placeholder="Ex: Siddharth Sundram"
+                                       class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-slate-400"><i class="fas fa-phone"></i></span>
+                                <input type="text" name="phone" required 
+                                       placeholder="Ex: +91 6202067088"
+                                       class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Delivery Address</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-slate-400"><i class="fas fa-map-marker-alt"></i></span>
+                                <textarea name="address" required rows="3"
+                                          placeholder="Ex: BD-104 Tirupati Heights, Kestopur, Kolkata..."
+                                          class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition text-sm"></textarea>
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 transition-all duration-200 transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-2">
+                            <span>Place Order Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                        <!-- <div class="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 font-medium">
+                            <span class="flex items-center gap-1.5"><i class="fas fa-shield-alt text-green-500"></i> Secure Payment</span>
+                            <span class="flex items-center gap-1.5"><i class="fas fa-truck text-blue-500"></i> Fast Delivery</span>
+                        </div> -->
+
+                    </form>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label class="block font-medium mb-1">Address</label>
-                <textarea name="address" required class="w-full border p-2 rounded" placeholder="Ex: BD-104 Tirupati Heights, Kestopur, Kolkata-700102, West-Bengal"></textarea>
-            </div>
+        </div>
 
-            <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                Submit Order
-            </button>
-
-        </form>
     </div>
 
 </div>
